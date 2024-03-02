@@ -1,11 +1,14 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
+const width = canvas.width = window.innerWidth;
+const height = canvas.height = window.innerHeight;
 
-var x = canvas.width / 2;
-var y = canvas.height / 2;
+var cakeSize = 80;
+
+// Posición de la tarta
+var x = canvas.width / 2 - (cakeSize / 2);
+var y = canvas.height / 4;
 var dy = 1
-
-var cakeSize = 30;
 
 var bgImg = new Image();
 bgImg.src = "background.jpg"
@@ -18,23 +21,42 @@ draw();
 var game = setInterval(draw, 10);
 
 
-document.addEventListener("keydown", click, false);
-function click(e) {
+document.addEventListener("keydown", keyDown, false);
+function keyDown(e) {
     switch (e.keyCode) {
         case 37: // Left arrow
             console.log("Izquierdo");
-            if (x > 0) {
-                x -= 10;
+            if (x > 10) {
+                x -= 20;
             }
             break;
         case 39: // Right arrow
             console.log("Derecho");
-            if (x + cakeSize < canvas.width) {
-                x += 10;
+            if (x + cakeSize + 10 < canvas.width) {
+                x += 20;
             }
             break;
     }
 }
+
+(function(element, events) {
+    events.forEach(e => element.addEventListener(e, click, false))
+}) (document, ["pointerover", "click"])
+
+function click(e) {
+    console.log(e);
+
+    if (e.x < canvas.width / 2 ) {
+        if (x > 10) {
+            x -= 20
+        }
+    } else {
+        if (x + cakeSize + 10 < canvas.width) {
+            x += 20
+        }
+    }
+}
+
 
 function drawBackground() {
     ctx.beginPath();
@@ -58,12 +80,12 @@ function draw() {
 
     // drawBackground();
     // console.log(y);
-    if (y + cakeSize >= canvas.height) {
-        console.log("Suuube");
-        y -= 80
-    }
+    // if (y + cakeSize >= canvas.height) {
+    //     console.log("Suuube");
+    //     y -= 120
+    // }
 
     drawCake();
 
-    y += dy
+    // y += dy
 }

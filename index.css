@@ -1,25 +1,14 @@
-html, body {
-    /* min-height: 100vh; */
-    min-height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    resize: none;
-    background-color: #c5fad4;
-    /* height: inherit; */
-}
-
-/* body {
+body {
     overflow: hidden;
     height: inherit;
     resize: none;
-    margin: 0 auto;
-} */
+    margin: 0;
+    background-color: #c5fad4;
+}
 
 
 canvas {
     min-width: 100%;
-    height: 100%;
     cursor: crosshair;
     display: block;
 }
