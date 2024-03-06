@@ -19,12 +19,10 @@ cloudImg.src = "cloud.png";
 
 let theEnd = false;
 
-var clouds = new Array();
-let cloud = new Cloud(random(0, width - 220), height, 3, 220);
-clouds.push(cloud);
-
-const cloudFrequency = 400;
+var clouds = new Map();
+var cloudIdGenerator = 0;
 var generateCloud = 0;
+const cloudFrequency = 400;
 
 draw();
 var game = setInterval(draw, 10);
@@ -34,13 +32,11 @@ document.addEventListener("keydown", keyDown, false);
 function keyDown(e) {
     switch (e.keyCode) {
         case 37: // Left arrow
-            console.log("Izquierdo");
             if (x > 10) {
                 x -= 20;
             }
             break;
         case 39: // Right arrow
-            console.log("Derecho");
             if (x + cakeSize + 10 < canvas.width) {
                 x += 20;
             }
@@ -108,24 +104,26 @@ function drawCake() {
 
 
 function drawClouds() {
-    clouds.forEach(cloud => {
-        // console.log(cloud);
+    for (const [key, cloud] of clouds) {
         ctx.beginPath();
         ctx.drawImage(cloudImg, cloud.x, cloud.y, cloud.size, cloud.size);
         ctx.closePath();
-        cloud.y -= cloud.speed
-    });
+        cloud.y -= cloud.speed // Increase its Y position
 
-    if (generateCloud == cloudFrequency) {
-        let cloud = new Cloud(random(0, width - 220), height, 3, 220);
-        clouds.push(cloud);
-        console.log(clouds);
-    
-        generateCloud = 0;
+        // If the cloud beats the top bound, delete it
+        if (cloud.y + cloud.size < 0) {
+            clouds.delete(key)
+        }
     }
 
-    if (cloud.y < 0) {
-        delete cloud
+    // Generate a cloud
+    if (generateCloud == cloudFrequency) {
+        let cloud = new Cloud(random(0, width - 220), height, 3, 220);
+        clouds.set(cloudIdGenerator, cloud);
+        console.log(clouds);
+
+        cloudIdGenerator++;
+        generateCloud = 0;
     }
 
     generateCloud++;
@@ -137,18 +135,8 @@ function draw() {
 
     drawClouds();
 
-    // console.log(clouds);
-    // drawBackground();
-    // console.log(y);
-    // if (y + cakeSize >= canvas.height) {
-    //     console.log("Suuube");
-    //     y -= 120
-    // }
-
     drawCake();
 
-
-    // y += dy
 }
 
 
