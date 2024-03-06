@@ -3,17 +3,13 @@ var ctx = canvas.getContext("2d");
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
-var cakeSize = 80;
-
-// Posición de la tarta
-var x = canvas.width / 2 - (cakeSize / 2);
-var y = canvas.height / 4;
-var dy = 1
+// Plane dimension
+var plane = new Plane(canvas.width / 2 - (80 / 2), canvas.height / 4, 1, 80)
 
 var bgImg = new Image();
 bgImg.src = "background.jpg";
-var cakeImg = new Image();
-cakeImg.src = "cake.png";
+var planeImg = new Image();
+planeImg.src = "cake.png";
 var cloudImg = new Image();
 cloudImg.src = "cloud.png";
 
@@ -32,13 +28,13 @@ document.addEventListener("keydown", keyDown, false);
 function keyDown(e) {
     switch (e.keyCode) {
         case 37: // Left arrow
-            if (x > 10) {
-                x -= 20;
+            if (plane.x > 10) {
+                plane.x -= 20;
             }
             break;
         case 39: // Right arrow
-            if (x + cakeSize + 10 < canvas.width) {
-                x += 20;
+            if (plane.x + plane.size + 10 < canvas.width) {
+                plane.x += 20;
             }
             break;
     }
@@ -75,12 +71,12 @@ function move(e) {
     while (moving) {
         if (e.x < canvas.width / 2) {
             console.log(e);
-            if (x > 10) {
-                x -= 20
+            if (plane.x > 10) {
+                plane.x -= 20
             }
         } else {
-            if (x + cakeSize + 10 < canvas.width) {
-                x += 20
+            if (plane.x + plane.size + 10 < canvas.width) {
+                plane.x += 20
             }
         }
     }
@@ -94,11 +90,11 @@ function drawBackground() {
 }
 
 /**
- * Draw Cake
+ * Draw Plane
  */
-function drawCake() {
+function drawPlane() {
     ctx.beginPath();
-    ctx.drawImage(cakeImg, x, y, cakeSize, cakeSize);
+    ctx.drawImage(planeImg, plane.x, plane.y, plane.size, plane.size);
     ctx.closePath();
 }
 
@@ -134,13 +130,13 @@ function drawClouds() {
 function checkImpact(cloud) {
     let impact = false;
     // Side cloud collision
-    if (x + cakeSize == cloud.x && y > cloud.y) {
+    if (plane.x + plane.size == cloud.x && plane.y > cloud.y) {
         impact = true;
         console.log("Lateral");
     }
 
     // Top cloud collision
-    if (x + cakeSize == cloud.x && y < cloud.y + cloud.size) {
+    if (plane.x + plane.size == cloud.x && plane.y < cloud.y + cloud.size) {
         impact = true;
         console.log("Lateral");
     }
@@ -154,7 +150,7 @@ function draw() {
 
     drawClouds();
 
-    drawCake();
+    drawPlane();
 }
 
 
