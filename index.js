@@ -108,19 +108,20 @@ function drawClouds() {
         ctx.beginPath();
         ctx.drawImage(cloudImg, cloud.x, cloud.y, cloud.size, cloud.size);
         ctx.closePath();
-        cloud.y -= cloud.speed // Increase its Y position
+        cloud.y -= cloud.speed // Increase its Y position to rise the cloud
 
         // If the cloud beats the top bound, delete it
         if (cloud.y + cloud.size < 0) {
             clouds.delete(key)
         }
+
+        theEnd = checkImpact(cloud);
     }
 
     // Generate a cloud
     if (generateCloud == cloudFrequency) {
         let cloud = new Cloud(random(0, width - 220), height, 3, 220);
         clouds.set(cloudIdGenerator, cloud);
-        console.log(clouds);
 
         cloudIdGenerator++;
         generateCloud = 0;
@@ -130,13 +131,30 @@ function drawClouds() {
 }
 
 
+function checkImpact(cloud) {
+    let impact = false;
+    // Side cloud collision
+    if (x + cakeSize == cloud.x && y > cloud.y) {
+        impact = true;
+        console.log("Lateral");
+    }
+
+    // Top cloud collision
+    if (x + cakeSize == cloud.x && y < cloud.y + cloud.size) {
+        impact = true;
+        console.log("Lateral");
+    }
+
+    return impact;
+}
+
+
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawClouds();
 
     drawCake();
-
 }
 
 
