@@ -4,7 +4,7 @@ const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
 // Plane dimension
-var plane = new Plane(canvas.width / 2 - (80 / 2), canvas.height / 4, 1, 80)
+var plane = new Plane(canvas.width / 2 - (80 / 2), canvas.height / 4, 20, 80)
 
 var bgImg = new Image();
 bgImg.src = "background.jpg";
@@ -29,12 +29,12 @@ function keyDown(e) {
     switch (e.keyCode) {
         case 37: // Left arrow
             if (plane.x > 10) {
-                plane.x -= 20;
+                plane.x -= plane.speed;
             }
             break;
         case 39: // Right arrow
             if (plane.x + plane.size + 10 < canvas.width) {
-                plane.x += 20;
+                plane.x += plane.speed;
             }
             break;
     }
@@ -61,8 +61,10 @@ function keyDown(e) {
 // }
 
 document.addEventListener("click", function (e) {
-    console.log(e.y);
-    console.log(height);
+    console.log("X:" + e.x);
+    console.log("Y:" + e.y);
+    console.log("Avion X:" + plane.x);
+    console.log("Avion Y:" + plane.y);
 })
 
 function move(e) {
@@ -129,16 +131,29 @@ function drawClouds() {
 
 function checkImpact(cloud) {
     let impact = false;
-    // Side cloud collision
-    if (plane.x + plane.size == cloud.x && plane.y > cloud.y) {
-        impact = true;
-        console.log("Lateral");
-    }
 
     // Top cloud collision
-    if (plane.x + plane.size == cloud.x && plane.y < cloud.y + cloud.size) {
-        impact = true;
-        console.log("Lateral");
+    if (plane.y + plane.size > cloud.y && plane.x + plane.size > cloud.x && plane.x < cloud.x + cloud.size) {
+        hayImpacto = true;
+        console.log("Impacto Superior");
+    }
+
+    // if (plane.x + plane.size < cloud.x + plane.speed && plane.x + plane.size > cloud.x - plane.speed) {
+    //     console.log("Oyeeeee");
+    // }
+    // Left cloud collision
+    if (plane.x + plane.size < cloud.x + plane.speed && plane.x + plane.size > cloud.x - plane.speed && plane.y < cloud.y + cloud.size && plane.y + plane.size > cloud.y) {
+        hayImpacto = true;
+        console.log("Impacto lateral izquierdo con la nube");
+    }
+
+    // if (plane.x < cloud.x + cloud.size + plane.speed && plane.x > cloud.x + cloud.size - plane.speed) {
+    //     console.log("Oyeeeee");
+    // }
+    // Right cloud collision
+    if (plane.x < cloud.x + cloud.size + plane.speed && plane.x > cloud.x + cloud.size - plane.speed && plane.y < cloud.y + cloud.size && plane.y + plane.size > cloud.y) {
+        hayImpacto = true;
+        console.log("Impacto lateral derecho con la nube");
     }
 
     return impact;
