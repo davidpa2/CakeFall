@@ -38,6 +38,9 @@ function keyDown(e) {
             }
             break;
     }
+    if (theEnd) {
+        window.location.reload();
+    }
 }
 
 // let moving = false;
@@ -113,7 +116,9 @@ function drawClouds() {
             clouds.delete(key)
         }
 
-        theEnd = checkImpact(cloud);
+        if (!theEnd) {
+            theEnd = checkImpact(cloud);
+        }
     }
 
     // Generate a cloud
@@ -133,9 +138,9 @@ function checkImpact(cloud) {
     let impact = false;
 
     // Top cloud collision
-    if (plane.y + plane.size > cloud.y && plane.x + plane.size > cloud.x && plane.x < cloud.x + cloud.size) {
-        hayImpacto = true;
-        console.log("Impacto Superior");
+    if (plane.y + plane.size > cloud.y && plane.y < cloud.y + cloud.size && plane.x + plane.size > cloud.x && plane.x < cloud.x + cloud.size) {
+        impact = true;
+        // console.log("Impacto Superior");
     }
 
     // if (plane.x + plane.size < cloud.x + plane.speed && plane.x + plane.size > cloud.x - plane.speed) {
@@ -143,8 +148,8 @@ function checkImpact(cloud) {
     // }
     // Left cloud collision
     if (plane.x + plane.size < cloud.x + plane.speed && plane.x + plane.size > cloud.x - plane.speed && plane.y < cloud.y + cloud.size && plane.y + plane.size > cloud.y) {
-        hayImpacto = true;
-        console.log("Impacto lateral izquierdo con la nube");
+        impact = true;
+        // console.log("Impacto lateral izquierdo con la nube");
     }
 
     // if (plane.x < cloud.x + cloud.size + plane.speed && plane.x > cloud.x + cloud.size - plane.speed) {
@@ -152,11 +157,17 @@ function checkImpact(cloud) {
     // }
     // Right cloud collision
     if (plane.x < cloud.x + cloud.size + plane.speed && plane.x > cloud.x + cloud.size - plane.speed && plane.y < cloud.y + cloud.size && plane.y + plane.size > cloud.y) {
-        hayImpacto = true;
-        console.log("Impacto lateral derecho con la nube");
+        impact = true;
+        // console.log("Impacto lateral derecho con la nube");
     }
 
     return impact;
+}
+
+function lose() {
+    ctx.font = "150px Times";
+    ctx.fillStyle = "blue";
+    ctx.fillText("¡Has perdido!", 80, canvas.height / 2 - 100);
 }
 
 
@@ -166,6 +177,11 @@ function draw() {
     drawClouds();
 
     drawPlane();
+
+    if (theEnd) {
+        clearInterval(game);
+        lose();
+    }
 }
 
 
