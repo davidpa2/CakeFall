@@ -43,25 +43,25 @@ function keyDown(e) {
     }
 }
 
-// let moving = false;
-// (function (element, events) {
-//     events.forEach(e => element.addEventListener(e, click, false))
-// })(document, ["mousedown", "mouseup"]) // pointerover
+ let moving = false;
+ (function (element, events) {
+     events.forEach(e => element.addEventListener(e, click, false))
+ })(document, ["mousedown", "mouseup"]) // pointerover
 
-// function click(e) {
-//     console.log(e);
-//     switch (e.type) {
-//         case "mousedown":
-//             console.log("Pulsar");
-//             moving = true;
-//             move(e);
+ function click(e) {
+     console.log(e);
+     switch (e.type) {
+         case "mousedown":
+             console.log("Pulsar");
+             moving = true;
+             move(e);
 
-//         case "mouseup":
-//             console.log("Soltar");
-//             moving = false;
-//             move(e);
-//         }
-// }
+         case "mouseup":
+             console.log("Soltar");
+             moving = false;
+             //move(e);
+         }
+}
 
 document.addEventListener("click", function (e) {
     console.log("X:" + e.x);
