@@ -13,8 +13,6 @@ cloudImg.src = "cloud.png";
 var cakeImg = new Image();
 cakeImg.src = "cake.png";
 
-let theEnd = false;
-
 var clouds = new Map();
 var cloudIdGenerator = 0;
 var generateCloud = 0;
@@ -25,6 +23,7 @@ var cakeIdGenerator = 0;
 var generateCakeChance = 20;
 var eatenCakes = 0;
 var cakesToEat = 35;
+var cakeSize = 80;
 
 let movingLeft = false;
 let movingRight = false;
@@ -34,6 +33,7 @@ var minCloudSize = 210;
 var maxCloudSize = 220;
 
 var showAdvice = true;
+let theEnd = false;
 
 draw();
 var game = setInterval(draw, 10);
@@ -114,7 +114,6 @@ function drawPlane() {
     ctx.closePath();
 }
 
-
 function drawClouds() {
     for (const [key, cloud] of clouds) {
         ctx.beginPath();
@@ -166,47 +165,40 @@ function drawCakes() {
 
     // Generate a cake
     if (generateCakeChance > random(0, 10000)) {
-        let cake = new Cake(random(0, width - 220), height, random(2, 5), 80);
+        let cake = new Cake(random(0, width - 220), height, random(2, 5), cakeSize);
         cakes.set(cakeIdGenerator, cake);
 
         cakeIdGenerator++;
     }
 }
 
-function drawCakeCounter() {
-    ctx.beginPath();
-    ctx.font = "60px Times";
-    ctx.textAlign = "left"
-    ctx.fillStyle = "white";
-    ctx.fillText("Tartas comidas: " + eatenCakes, 25, 70);
-    ctx.closePath();
-}
-
+/**
+ * Check impact on an cloud or a cake
+ * @param {*} item The item that will be checked
+ * @returns 
+ */
 function checkImpact(item) {
     let impact = false;
+    let added = 0; // Variable to accurate the impact to a cloud
+
+    // Just if the item is a cloud
+    if (item.size > cakeSize) {
+        added = item.size / 6;
+    }
 
     // Top collision
-    if (plane.y + plane.size > item.y && plane.y < item.y + item.size && plane.x + plane.size > item.x && plane.x < item.x + item.size) {
+    if (plane.y + plane.size > item.y + added && plane.y < item.y + item.size + added && plane.x + plane.size > item.x && plane.x < item.x + item.size) {
         impact = true;
-        // console.log("Impacto Superior");
     }
 
-    // if (plane.x + plane.size < cloud.x + plane.speed && plane.x + plane.size > cloud.x - plane.speed) {
-    //     console.log("Oyeeeee");
-    // }
     // Left collision
-    if (plane.x + plane.size < item.x + plane.speed && plane.x + plane.size > item.x - plane.speed && plane.y < item.y + item.size && plane.y + plane.size > item.y) {
+    if (plane.x + plane.size < item.x && plane.x + plane.size > item.x && plane.y < item.y + item.size && plane.y + plane.size > item.y) {
         impact = true;
-        // console.log("Impacto lateral izquierdo con la nube");
     }
 
-    // if (plane.x < cloud.x + cloud.size + plane.speed && plane.x > cloud.x + cloud.size - plane.speed) {
-    //     console.log("Oyeeeee");
-    // }
     // Right collision
-    if (plane.x < item.x + item.size + plane.speed && plane.x > item.x + item.size - plane.speed && plane.y < item.y + item.size && plane.y + plane.size > item.y) {
+    if (plane.x < item.x + item.size && plane.x > item.x + item.size && plane.y < item.y + item.size && plane.y + plane.size > item.y) {
         impact = true;
-        // console.log("Impacto lateral derecho con la nube");
     }
 
     return impact;
@@ -234,6 +226,15 @@ function checkLevel() {
     }
 }
 
+function drawCakeCounter() {
+    ctx.beginPath();
+    ctx.font = "60px Times";
+    ctx.textAlign = "left"
+    ctx.fillStyle = "white";
+    ctx.fillText("Tartas comidas: " + eatenCakes, 25, 70);
+    ctx.closePath();
+}
+
 function drawAdvice() {
     if (showAdvice) {
         ctx.beginPath();
@@ -242,24 +243,28 @@ function drawAdvice() {
         ctx.fillStyle = "blue";
         ctx.fillText("¡Recoge tartas y esquiva nubes!", canvas.width / 2, canvas.height - 150, canvas.width);
         ctx.font = "5vw Times";
-        ctx.fillText("Toca un lado u otro de la pantalla para moverte", canvas.width / 2, canvas.height - 50, canvas.width);
+        ctx.fillText("Toca un lado u otro de la pantalla para moverte", canvas.width / 2, canvas.height - 50, canvas.width - 20);
         ctx.closePath();
     }
 }
 
 function win() {
+    ctx.beginPath();
     ctx.font = "8vw Times";
     ctx.textAlign = "center"
     ctx.fillStyle = "blue";
     ctx.fillText("¡Muchísimas felicidades!", canvas.width / 2, canvas.height / 2 - 50, canvas.width);
     ctx.fillText("¡35 tartas, 35 años!", canvas.width / 2, canvas.height / 2 + 50, canvas.width);
+    ctx.closePath();
 }
 
 function lose() {
+    ctx.beginPath();
     ctx.font = "13vw Times";
     ctx.textAlign = "center"
     ctx.fillStyle = "blue";
     ctx.fillText("¡Has perdido!", canvas.width / 2, canvas.height / 2 - 20, canvas.width);
+    ctx.closePath();
 }
 
 
