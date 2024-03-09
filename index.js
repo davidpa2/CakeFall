@@ -4,12 +4,12 @@ const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
 // Plane dimension
-var plane = new Plane(canvas.width / 2 - (80 / 2), canvas.height / 4, 13, 80)
+var plane = new Plane(canvas.width / 2 - (100 / 2), canvas.height / 4, 13, 100)
 
 var bgImg = new Image();
 bgImg.src = "background.jpg";
 var planeImg = new Image();
-planeImg.src = "cake.png";
+planeImg.src = "Dani.png";
 var cloudImg = new Image();
 cloudImg.src = "cloud.png";
 
@@ -19,6 +19,11 @@ var clouds = new Map();
 var cloudIdGenerator = 0;
 var generateCloud = 0;
 const cloudFrequency = 400;
+
+var cakes = new Map();
+var cakeIdGenerator = 0;
+var generateCake = 0;
+const cakeFrequency = 300;
 
 let movingLeft = false;
 let movingRight = false;
@@ -35,14 +40,14 @@ function arrowEvent(e) {
         case 37: // Left arrow
             if (e.type == "keydown") {
                 movingLeft = true;
-            } else if ("keyup") {
+            } else if (e.type == "keyup") {
                 movingLeft = false;
             }
             break;
         case 39: // Right arrow
             if (e.type == "keydown") {
                 movingRight = true;
-            } else if ("keyup") {
+            } else if (e.type == "keyup") {
                 movingRight = false;
             }
             break;
@@ -137,6 +142,19 @@ function drawClouds() {
     generateCloud++;
 }
 
+function drawCakes() {
+
+        // Generate a cloud
+        if (generateCloud == cloudFrequency) {
+            let cloud = new Cake(random(0, width - 220), height, 3, 220);
+            clouds.set(cloudIdGenerator, cloud);
+    
+            cloudIdGenerator++;
+            generateCloud = 0;
+        }
+
+        generateCake++;
+}
 
 function checkImpact(cloud) {
     let impact = false;
