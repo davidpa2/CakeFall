@@ -220,7 +220,7 @@ function checkLevel() {
             maxCloudSize = 300;
             break;
 
-        case 2:
+        case 30:
             generateCloudSpeed = 7;
             cloudFrequency = 100;
             generateCloud = 80;
