@@ -194,12 +194,12 @@ function checkImpact(item) {
     }
 
     // Left collision
-    if (plane.x + plane.size < item.x && plane.x + plane.size > item.x && plane.y < item.y + item.size && plane.y + plane.size > item.y) {
+    if (plane.x + plane.size < item.x && plane.x + plane.size > item.x && plane.y < item.y + item.size - added && plane.y + plane.size > item.y - added) {
         impact = true;
     }
 
     // Right collision
-    if (plane.x < item.x + item.size && plane.x > item.x + item.size && plane.y < item.y + item.size && plane.y + plane.size > item.y) {
+    if (plane.x < item.x + item.size && plane.x > item.x + item.size && plane.y < item.y + item.size - added && plane.y + plane.size > item.y - added) {
         impact = true;
     }
 
