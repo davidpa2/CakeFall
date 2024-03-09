@@ -118,6 +118,7 @@ function drawClouds() {
     for (const [key, cloud] of clouds) {
         ctx.beginPath();
         ctx.drawImage(cloudImg, cloud.x, cloud.y, cloud.size, cloud.size);
+        // ctx.strokeRect(cloud.x, cloud.y, cloud.size, cloud.size);
         ctx.closePath();
         cloud.y -= cloud.speed // Increase its Y position to rise the cloud
 
@@ -133,7 +134,8 @@ function drawClouds() {
 
     // Generate a cloud
     if (generateCloud == cloudFrequency) {
-        let cloud = new Cloud(random(0, width - 220), height, generateCloudSpeed, random(minCloudSize, maxCloudSize));
+        let cloudSize = random(minCloudSize, maxCloudSize)
+        let cloud = new Cloud(random(0, width - cloudSize), height, generateCloudSpeed, cloudSize);
         clouds.set(cloudIdGenerator, cloud);
 
         cloudIdGenerator++;
