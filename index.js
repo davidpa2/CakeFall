@@ -24,7 +24,7 @@ var cakes = new Map();
 var cakeIdGenerator = 0;
 var generateCakeChance = 20;
 var eatenCakes = 0;
-var cakesToEat = 1;
+var cakesToEat = 35;
 
 let movingLeft = false;
 let movingRight = false;
