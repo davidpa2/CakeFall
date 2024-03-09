@@ -30,6 +30,8 @@ let movingLeft = false;
 let movingRight = false;
 
 var generateCloudSpeed = 4;
+var minCloudSize = 210;
+var maxCloudSize = 220;
 
 draw();
 var game = setInterval(draw, 10);
@@ -130,7 +132,7 @@ function drawClouds() {
 
     // Generate a cloud
     if (generateCloud == cloudFrequency) {
-        let cloud = new Cloud(random(0, width - 220), height, generateCloudSpeed, 220);
+        let cloud = new Cloud(random(0, width - 220), height, generateCloudSpeed, random(minCloudSize, maxCloudSize));
         clouds.set(cloudIdGenerator, cloud);
 
         cloudIdGenerator++;
@@ -215,12 +217,14 @@ function checkLevel() {
         case 20:
             cloudFrequency = 200;
             generateCloud = 180;
+            maxCloudSize = 300;
             break;
 
-        case 30:
+        case 2:
             generateCloudSpeed = 7;
             cloudFrequency = 100;
             generateCloud = 80;
+            maxCloudSize = 400;
             break;
     }
 }
