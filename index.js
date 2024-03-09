@@ -18,16 +18,18 @@ let theEnd = false;
 var clouds = new Map();
 var cloudIdGenerator = 0;
 var generateCloud = 0;
-const cloudFrequency = 400;
+var cloudFrequency = 300;
 
 var cakes = new Map();
 var cakeIdGenerator = 0;
 var generateCakeChance = 20;
 var eatenCakes = 0;
-var cakesToEat = 35;
+var cakesToEat = 1;
 
 let movingLeft = false;
 let movingRight = false;
+
+var generateCloudSpeed = 4;
 
 draw();
 var game = setInterval(draw, 10);
@@ -128,7 +130,7 @@ function drawClouds() {
 
     // Generate a cloud
     if (generateCloud == cloudFrequency) {
-        let cloud = new Cloud(random(0, width - 220), height, 3, 220);
+        let cloud = new Cloud(random(0, width - 220), height, generateCloudSpeed, 220);
         clouds.set(cloudIdGenerator, cloud);
 
         cloudIdGenerator++;
@@ -204,6 +206,25 @@ function checkImpact(item) {
     return impact;
 }
 
+function checkLevel() {
+    switch (eatenCakes) {
+        case 10:
+            generateCloudSpeed = 5;
+            break;
+
+        case 20:
+            cloudFrequency = 200;
+            generateCloud = 180;
+            break;
+
+        case 30:
+            generateCloudSpeed = 7;
+            cloudFrequency = 100;
+            generateCloud = 80;
+            break;
+    }
+}
+
 function win() {
     ctx.font = "8vw Times";
     ctx.textAlign = "center"
@@ -227,6 +248,8 @@ function draw() {
     drawCakes();
     drawPlane();
     drawCakeCounter();
+
+    checkLevel();
 
     moving();
 
