@@ -4,7 +4,7 @@ const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
 // Plane dimension
-var plane = new Plane(canvas.width / 2 - (80 / 2), canvas.height / 4, 20, 80)
+var plane = new Plane(canvas.width / 2 - (80 / 2), canvas.height / 4, 13, 80)
 
 var bgImg = new Image();
 bgImg.src = "background.jpg";
@@ -20,21 +20,30 @@ var cloudIdGenerator = 0;
 var generateCloud = 0;
 const cloudFrequency = 400;
 
+let movingLeft = false;
+let movingRight = false;
+
 draw();
 var game = setInterval(draw, 10);
 
-
-document.addEventListener("keydown", keyDown, false);
-function keyDown(e) {
+// KeyEvents
+(function (element, events) {
+    events.forEach(e => element.addEventListener(e, arrowEvent, false))
+})(document, ["keydown", "keyup"]) // pointerover
+function arrowEvent(e) {
     switch (e.keyCode) {
         case 37: // Left arrow
-            if (plane.x > 10) {
-                plane.x -= plane.speed;
+            if (e.type == "keydown") {
+                movingLeft = true;
+            } else if ("keyup") {
+                movingLeft = false;
             }
             break;
         case 39: // Right arrow
-            if (plane.x + plane.size + 10 < canvas.width) {
-                plane.x += plane.speed;
+            if (e.type == "keydown") {
+                movingRight = true;
+            } else if ("keyup") {
+                movingRight = false;
             }
             break;
     }
@@ -43,50 +52,45 @@ function keyDown(e) {
     }
 }
 
- let moving = false;
- (function (element, events) {
-     events.forEach(e => element.addEventListener(e, click, false))
- })(document, ["mousedown", "mouseup"]) // pointerover
-
- function click(e) {
-     console.log(e);
-     switch (e.type) {
-         case "mousedown":
-             console.log("Pulsar");
-             moving = true;
-             move(e);
-
-         case "mouseup":
-             console.log("Soltar");
-             moving = false;
-             //move(e);
-         }
-}
-
-document.addEventListener("click", function (e) {
-    console.log("X:" + e.x);
-    console.log("Y:" + e.y);
-    console.log("Avion X:" + plane.x);
-    console.log("Avion Y:" + plane.y);
-})
-
-function move(e) {
-    // e.preventDefault();
-    console.log(e.x, e.y);
-    while (moving) {
-        if (e.x < canvas.width / 2) {
-            console.log(e);
-            if (plane.x > 10) {
-                plane.x -= 20
+// Pointer Events
+(function (element, events) {
+    events.forEach(e => element.addEventListener(e, clickEvent, false))
+})(document, ["pointerdown", "pointerup"])
+function clickEvent(e) {
+    switch (e.type) {
+        case "pointerdown":
+            if (e.x < canvas.width / 2) {
+                if (plane.x > 10) {
+                    movingLeft = true;
+                }
+            } else {
+                if (plane.x + plane.size + 10 < canvas.width) {
+                    movingRight = true;
+                }
             }
-        } else {
-            if (plane.x + plane.size + 10 < canvas.width) {
-                plane.x += 20
-            }
-        }
+            break;
+        case "pointerup":
+            movingRight = false;
+            movingLeft = false;
+            break;
+    }
+    if (theEnd) {
+        window.location.reload();
     }
 }
 
+function moving() {
+    if (movingLeft) {
+        if (plane.x > 10) {
+            plane.x -= plane.speed;
+        }
+    }
+    if (movingRight) {
+        if (plane.x + plane.size + 10 < canvas.width) {
+            plane.x += plane.speed;
+        }
+    }
+}
 
 function drawBackground() {
     ctx.beginPath();
@@ -165,7 +169,7 @@ function checkImpact(cloud) {
 }
 
 function lose() {
-    ctx.font = "150px Times";
+    ctx.font = "130px Times";
     ctx.fillStyle = "blue";
     ctx.fillText("¡Has perdido!", 80, canvas.height / 2 - 100);
 }
@@ -182,6 +186,8 @@ function draw() {
         clearInterval(game);
         lose();
     }
+
+    moving();
 }
 
 
