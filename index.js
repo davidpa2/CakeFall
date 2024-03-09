@@ -33,6 +33,8 @@ var generateCloudSpeed = 4;
 var minCloudSize = 210;
 var maxCloudSize = 220;
 
+var showAdvice = true;
+
 draw();
 var game = setInterval(draw, 10);
 
@@ -155,6 +157,7 @@ function drawCakes() {
         }
 
         if (checkImpact(cake)) {
+            showAdvice = false;
             cakes.delete(key)
             eatenCakes++;
             console.log(eatenCakes);
@@ -173,6 +176,7 @@ function drawCakes() {
 function drawCakeCounter() {
     ctx.beginPath();
     ctx.font = "60px Times";
+    ctx.textAlign = "left"
     ctx.fillStyle = "white";
     ctx.fillText("Tartas comidas: " + eatenCakes, 25, 70);
     ctx.closePath();
@@ -212,6 +216,7 @@ function checkLevel() {
     switch (eatenCakes) {
         case 10:
             generateCloudSpeed = 5;
+            maxCloudSize = 250;
             break;
 
         case 20:
@@ -226,6 +231,19 @@ function checkLevel() {
             generateCloud = 80;
             maxCloudSize = 400;
             break;
+    }
+}
+
+function drawAdvice() {
+    if (showAdvice) {
+        ctx.beginPath();
+        ctx.font = "7vw Times";
+        ctx.textAlign = "center"
+        ctx.fillStyle = "blue";
+        ctx.fillText("¡Recoge tartas y esquiva nubes!", canvas.width / 2, canvas.height - 150, canvas.width);
+        ctx.font = "5vw Times";
+        ctx.fillText("Toca un lado u otro de la pantalla para moverte", canvas.width / 2, canvas.height - 50, canvas.width);
+        ctx.closePath();
     }
 }
 
@@ -253,6 +271,8 @@ function draw() {
     drawPlane();
     drawCakeCounter();
 
+    drawAdvice();
+
     checkLevel();
 
     moving();
@@ -267,9 +287,6 @@ function draw() {
         lose();
     }
 }
-
-
-
 
 
 function random(min, max) {
