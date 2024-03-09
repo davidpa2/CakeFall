@@ -6,12 +6,12 @@ const height = canvas.height = window.innerHeight;
 // Plane dimension
 var plane = new Plane(canvas.width / 2 - (100 / 2), canvas.height / 4, 13, 100)
 
-var bgImg = new Image();
-bgImg.src = "background.jpg";
 var planeImg = new Image();
 planeImg.src = "Dani.png";
 var cloudImg = new Image();
 cloudImg.src = "cloud.png";
+var cakeImg = new Image();
+cakeImg.src = "cake.png";
 
 let theEnd = false;
 
@@ -22,8 +22,8 @@ const cloudFrequency = 400;
 
 var cakes = new Map();
 var cakeIdGenerator = 0;
-var generateCake = 0;
-const cakeFrequency = 300;
+var generateCakeChance = 20;
+var eatenCakes = 0;
 
 let movingLeft = false;
 let movingRight = false;
@@ -34,7 +34,7 @@ var game = setInterval(draw, 10);
 // KeyEvents
 (function (element, events) {
     events.forEach(e => element.addEventListener(e, arrowEvent, false))
-})(document, ["keydown", "keyup"]) // pointerover
+})(document, ["keydown", "keyup"])
 function arrowEvent(e) {
     switch (e.keyCode) {
         case 37: // Left arrow
@@ -97,11 +97,6 @@ function moving() {
     }
 }
 
-function drawBackground() {
-    ctx.beginPath();
-    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-    ctx.closePath();
-}
 
 /**
  * Draw Plane
@@ -143,24 +138,46 @@ function drawClouds() {
 }
 
 function drawCakes() {
+    for (const [key, cake] of cakes) {
+        ctx.beginPath();
+        ctx.drawImage(cakeImg, cake.x, cake.y, cake.size, cake.size);
+        ctx.closePath();
+        cake.y -= cake.speed // Increase its Y position to rise the cake
 
-        // Generate a cloud
-        if (generateCloud == cloudFrequency) {
-            let cloud = new Cake(random(0, width - 220), height, 3, 220);
-            clouds.set(cloudIdGenerator, cloud);
-    
-            cloudIdGenerator++;
-            generateCloud = 0;
+        // If the cake beats the top bound, delete it
+        if (cake.y + cake.size < 0) {
+            cakes.delete(key)
         }
 
-        generateCake++;
+        if (checkImpact(cake)) {
+            cakes.delete(key)
+            eatenCakes++;
+            console.log(eatenCakes);
+        }
+    }
+
+    // Generate a cake
+    if (generateCakeChance > random(0, 10000)) {
+        let cake = new Cake(random(0, width - 220), height, 3, 80);
+        cakes.set(cakeIdGenerator, cake);
+
+        cakeIdGenerator++;
+    }
 }
 
-function checkImpact(cloud) {
+function drawCakeCounter() {
+    ctx.beginPath();
+    ctx.font = "60px Times";
+    ctx.fillStyle = "white";
+    ctx.fillText("Tartas comidas: " + eatenCakes, 25, 70);
+    ctx.closePath();
+}
+
+function checkImpact(item) {
     let impact = false;
 
-    // Top cloud collision
-    if (plane.y + plane.size > cloud.y && plane.y < cloud.y + cloud.size && plane.x + plane.size > cloud.x && plane.x < cloud.x + cloud.size) {
+    // Top collision
+    if (plane.y + plane.size > item.y && plane.y < item.y + item.size && plane.x + plane.size > item.x && plane.x < item.x + item.size) {
         impact = true;
         // console.log("Impacto Superior");
     }
@@ -168,8 +185,8 @@ function checkImpact(cloud) {
     // if (plane.x + plane.size < cloud.x + plane.speed && plane.x + plane.size > cloud.x - plane.speed) {
     //     console.log("Oyeeeee");
     // }
-    // Left cloud collision
-    if (plane.x + plane.size < cloud.x + plane.speed && plane.x + plane.size > cloud.x - plane.speed && plane.y < cloud.y + cloud.size && plane.y + plane.size > cloud.y) {
+    // Left collision
+    if (plane.x + plane.size < item.x + plane.speed && plane.x + plane.size > item.x - plane.speed && plane.y < item.y + item.size && plane.y + plane.size > item.y) {
         impact = true;
         // console.log("Impacto lateral izquierdo con la nube");
     }
@@ -177,8 +194,8 @@ function checkImpact(cloud) {
     // if (plane.x < cloud.x + cloud.size + plane.speed && plane.x > cloud.x + cloud.size - plane.speed) {
     //     console.log("Oyeeeee");
     // }
-    // Right cloud collision
-    if (plane.x < cloud.x + cloud.size + plane.speed && plane.x > cloud.x + cloud.size - plane.speed && plane.y < cloud.y + cloud.size && plane.y + plane.size > cloud.y) {
+    // Right collision
+    if (plane.x < item.x + item.size + plane.speed && plane.x > item.x + item.size - plane.speed && plane.y < item.y + item.size && plane.y + plane.size > item.y) {
         impact = true;
         // console.log("Impacto lateral derecho con la nube");
     }
@@ -197,8 +214,10 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawClouds();
-
+    drawCakes();
     drawPlane();
+    drawCakeCounter();
+
 
     if (theEnd) {
         clearInterval(game);
