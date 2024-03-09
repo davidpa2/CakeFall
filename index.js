@@ -24,6 +24,7 @@ var cakes = new Map();
 var cakeIdGenerator = 0;
 var generateCakeChance = 20;
 var eatenCakes = 0;
+var cakesToEat = 35;
 
 let movingLeft = false;
 let movingRight = false;
@@ -158,7 +159,7 @@ function drawCakes() {
 
     // Generate a cake
     if (generateCakeChance > random(0, 10000)) {
-        let cake = new Cake(random(0, width - 220), height, 3, 80);
+        let cake = new Cake(random(0, width - 220), height, random(2, 5), 80);
         cakes.set(cakeIdGenerator, cake);
 
         cakeIdGenerator++;
@@ -203,10 +204,19 @@ function checkImpact(item) {
     return impact;
 }
 
-function lose() {
-    ctx.font = "130px Times";
+function win() {
+    ctx.font = "8vw Times";
+    ctx.textAlign = "center"
     ctx.fillStyle = "blue";
-    ctx.fillText("¡Has perdido!", 80, canvas.height / 2 - 100);
+    ctx.fillText("¡Muchísimas felicidades!", canvas.width / 2, canvas.height / 2 - 50, canvas.width);
+    ctx.fillText("¡35 tartas, 35 años!", canvas.width / 2, canvas.height / 2 + 50, canvas.width);
+}
+
+function lose() {
+    ctx.font = "13vw Times";
+    ctx.textAlign = "center"
+    ctx.fillStyle = "blue";
+    ctx.fillText("¡Has perdido!", canvas.width / 2, canvas.height / 2 - 20, canvas.width);
 }
 
 
@@ -218,13 +228,17 @@ function draw() {
     drawPlane();
     drawCakeCounter();
 
+    moving();
+
+    if (cakesToEat == eatenCakes) {
+        win();
+        clearInterval(game);
+    }
 
     if (theEnd) {
         clearInterval(game);
         lose();
     }
-
-    moving();
 }
 
 
