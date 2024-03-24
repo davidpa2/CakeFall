@@ -7,7 +7,7 @@ const height = canvas.height = window.innerHeight;
 var plane = new Plane(canvas.width / 2 - (100 / 2), canvas.height / 4, 13, 100)
 
 var planeImg = new Image();
-planeImg.src = "Dani.png";
+planeImg.src = "DaniLeft.png";
 var cloudImg = new Image();
 cloudImg.src = "cloud.png";
 var cakeImg = new Image();
@@ -109,6 +109,12 @@ function moving() {
  * Draw Plane
  */
 function drawPlane() {
+    if (movingLeft) {
+        planeImg.src = "DaniLeft.png"
+    } else if (movingRight) {
+        planeImg.src = "DaniRight.png"
+    }
+
     ctx.beginPath();
     ctx.drawImage(planeImg, plane.x, plane.y, plane.size, plane.size);
     ctx.closePath();
