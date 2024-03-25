@@ -231,7 +231,7 @@ function checkLevel() {
             generateCloudSpeed = 7;
             cloudFrequency = 100;
             generateCloud = 99;
-            maxCloudSize = 400;
+            maxCloudSize = 360;
             break;
     }
 }
