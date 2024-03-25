@@ -183,7 +183,7 @@ function drawCakes() {
 /**
  * Check impact on an cloud or a cake
  * @param {*} item The item that will be checked
- * @returns 
+ * @returns
  */
 function checkImpact(item) {
     let impact = false;
@@ -195,19 +195,21 @@ function checkImpact(item) {
     }
 
     // Top collision
-    if (plane.y + plane.size > item.y + added && plane.y < item.y + item.size + added && plane.x + plane.size > item.x && plane.x < item.x + item.size) {
+    if (plane.y + plane.size > item.y + added && plane.y < item.y + item.size - added
+        && plane.x + plane.size - (added / 2) > item.x && plane.x + (added / 2) < item.x + item.size
+    ) {
         impact = true;
     }
 
-    // Left collision
-    if (plane.x + plane.size < item.x && plane.x + plane.size > item.x && plane.y < item.y + item.size - added && plane.y + plane.size > item.y - added) {
-        impact = true;
-    }
+    // // Left collision
+    // if (plane.x + plane.size < item.x && plane.x + plane.size > item.x && plane.y < item.y + item.size - (added * 4) && plane.y + plane.size > item.y - (added * 4)) {
+    //     impact = true;
+    // }
 
-    // Right collision
-    if (plane.x < item.x + item.size && plane.x > item.x + item.size && plane.y < item.y + item.size - added && plane.y + plane.size > item.y - added) {
-        impact = true;
-    }
+    // // Right collision
+    // if (plane.x < item.x + item.size && plane.x > item.x + item.size && plane.y < item.y + item.size - added && plane.y + plane.size > item.y - added) {
+    //     impact = true;
+    // }
 
     return impact;
 }
@@ -228,7 +230,7 @@ function checkLevel() {
         case 30:
             generateCloudSpeed = 7;
             cloudFrequency = 100;
-            generateCloud = 80;
+            generateCloud = 99;
             maxCloudSize = 400;
             break;
     }
