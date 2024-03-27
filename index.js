@@ -7,6 +7,7 @@ const height = canvas.height = window.innerHeight;
 var plane = new Plane(canvas.width / 2 - (100 / 2), canvas.height / 4, 13, 100)
 
 var planeImg = new Image();
+planeImg.src = "DaniRight.png";
 planeImg.src = "DaniLeft.png";
 var cloudImg = new Image();
 cloudImg.src = "cloud.png";
